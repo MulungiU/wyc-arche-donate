@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AUGMT - WYC 후원</title>
+<!-- QR code library (CDN) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+:root {
+  --navy: #282560;
+  --orange: #F79421;
+  --red: #EF4438;
+  --cream: #FAF8F4;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; scroll-snap-type:y mandatory; }
+body { font-family:'Noto Sans KR',sans-serif; background:var(--cream); overflow-x:hidden; }
+
+/* NAV */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 40px;
+  background:rgba(28,25,80,0.96); backdrop-filter:blur(14px);
+}
+.nav-logo { font-family:'Playfair Display',serif; font-weight:900; font-size:1rem; color:#fff; letter-spacing:.04em; }
+.nav-logo span { color:var(--orange); }
+.nav-tabs { display:flex; gap:6px; }
+.nav-tab {
+  padding:6px 16px; border-radius:100px; font-size:.72rem; font-weight:700;
+  letter-spacing:.06em; text-decoration:none; color:rgba(255,255,255,.55);
+  transition:all .25s; border:1px solid transparent;
+}
+.nav-tab:hover { color:#fff; border-color:rgba(255,255,255,.2); }
+.nav-tab.active { color:#fff; background:var(--orange); border-color:var(--orange); }
+.nav-dots { display:flex; gap:8px; align-items:center; }
+.nav-dot {
+  width:9px; height:9px; border-radius:50%;
+  background:rgba(255,255,255,.25); cursor:pointer; transition:all .3s; text-decoration:none; display:block;
+}
+.nav-dot.active { background:var(--orange); transform:scale(1.3); }
+
+/* SECTIONS */
+section {
+  min-height:100vh; scroll-snap-align:start;
+  display:flex; flex-direction:column; justify-content:center;
+  position:relative; overflow:hidden; padding:90px 0 50px;
+}
+
+.s1 { background:var(--navy); }
+.s1::before {
+  content:''; position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 55% 55% at 85% 25%, rgba(247,148,33,.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 40% at 15% 85%, rgba(239,68,56,.1) 0%, transparent 55%);
+}
+.s1-grid {
+  position:absolute; inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:56px 56px;
+}
+
+.s2 { background:#f5f3ef; }
+.s2::before {
+  content:''; position:absolute; top:-80px; right:-80px;
+  width:480px; height:480px; border-radius:50%;
+  background:radial-gradient(circle, rgba(247,148,33,.1) 0%, transparent 70%);
+}
+
+.s3 { background:linear-gradient(140deg,#181630 0%,#282560 60%,#181630 100%); }
+.s3::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 65% 50% at 25% 65%, rgba(239,68,56,.1) 0%,transparent 60%);
+}
+
+.content { position:relative; z-index:2; max-width:1040px; margin:0 auto; padding:0 44px; width:100%; }
+
+.sec-num {
+  position:absolute; right:40px; top:50%; transform:translateY(-55%);
+  font-family:'Playfair Display',serif; font-size:9rem; font-weight:900;
+  line-height:1; letter-spacing:-.04em; pointer-events:none;
+}
+.sec-num-light { color:rgba(255,255,255,.05); }
+.sec-num-dark  { color:rgba(40,37,96,.06); }
+
+.badge {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:5px 14px; border-radius:100px;
+  font-size:.68rem; font-weight:700; letter-spacing:.14em; text-transform:uppercase; margin-bottom:20px;
+}
+.badge-light { background:rgba(255,255,255,.1); color:rgba(255,255,255,.85); border:1px solid rgba(255,255,255,.18); }
+.badge-dark  { background:rgba(40,37,96,.08); color:var(--navy); border:1px solid rgba(40,37,96,.18); }
+.bdot { width:6px; height:6px; border-radius:50%; background:var(--orange); }
+
+h1 { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,4.5vw,3.6rem); font-weight:900; line-height:1.1; letter-spacing:-.02em; margin-bottom:14px; }
+.h-light { color:#fff; }
+.h-dark  { color:var(--navy); }
+.h-accent { color:var(--orange); }
+
+.divider { width:52px; height:3px; border-radius:2px; margin-bottom:24px; }
+.div-orange { background:var(--orange); }
+.div-navy   { background:var(--navy); }
+
+.lead { font-size:clamp(.88rem,1.8vw,1rem); font-weight:300; line-height:1.85; max-width:500px; margin-bottom:36px; }
+.lead-light { color:rgba(255,255,255,.72); }
+.lead-dark  { color:rgba(40,37,96,.65); }
+
+/* ── QR wrapper ── */
+.qr-wrap {
+  width:110px; height:110px;
+  background:#fff; border-radius:10px; padding:6px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.qr-wrap canvas, .qr-wrap img { width:98px!important; height:98px!important; display:block; }
+
+/* ── ARCHE card (single centered) ── */
+.arche-center { display:flex; justify-content:center; }
+.donate-card {
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14);
+  border-radius:20px; padding:32px 28px; display:flex; flex-direction:column;
+  align-items:center; gap:16px; position:relative; overflow:hidden; width:280px;
+}
+.donate-card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(90deg,var(--orange),var(--red)); }
+.card-title { font-weight:700; font-size:.95rem; color:#fff; text-align:center; }
+.card-sub   { font-size:.75rem; font-weight:300; color:rgba(255,255,255,.55); text-align:center; }
+
+/* ── PROJECT grid ── */
+.proj-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+@media(max-width:900px){ .proj-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:480px){ .proj-grid { grid-template-columns:1fr 1fr; gap:10px; } }
+
+.proj-card {
+  background:#fff; border:1px solid rgba(40,37,96,.1); border-radius:16px;
+  padding:20px 14px; display:flex; flex-direction:column;
+  align-items:center; gap:10px; position:relative; overflow:hidden;
+  box-shadow:0 4px 18px rgba(40,37,96,.07);
+  transition:transform .25s,box-shadow .25s;
+}
+.proj-card:hover { transform:translateY(-3px); box-shadow:0 14px 36px rgba(40,37,96,.14); }
+.proj-card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(90deg,var(--orange),var(--red)); }
+.proj-flag { font-size:1.8rem; line-height:1; }
+.proj-name { font-weight:700; font-size:.78rem; color:var(--navy); text-align:center; }
+
+/* ── MISSIONARY grid ── */
+.miss-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+@media(max-width:900px){ .miss-grid { grid-template-columns:repeat(2,1fr); } }
+@media(max-width:480px){ .miss-grid { grid-template-columns:1fr 1fr; gap:10px; } }
+
+.miss-card {
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.1);
+  border-radius:16px; padding:20px 14px; display:flex; flex-direction:column;
+  align-items:center; gap:10px; position:relative; overflow:hidden;
+  transition:transform .25s,box-shadow .25s;
+}
+.miss-card:hover { transform:translateY(-3px); box-shadow:0 14px 40px rgba(0,0,0,.25); }
+.miss-card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(90deg,var(--orange),#ff6b35); }
+.miss-name { font-weight:700; font-size:.75rem; color:#fff; text-align:center; line-height:1.45; }
+
+/* ── PAY BUTTON ── */
+.pay-btn {
+  display:inline-flex; align-items:center; gap:6px;
+  padding:10px 20px; border-radius:100px; font-size:.75rem; font-weight:700;
+  text-decoration:none; transition:all .25s; letter-spacing:.04em; margin-top:auto;
+}
+.pay-primary { background:var(--orange); color:#fff; box-shadow:0 6px 22px rgba(247,148,33,.38); }
+.pay-primary:hover { background:#e8851a; transform:translateY(-1px); box-shadow:0 10px 30px rgba(247,148,33,.5); }
+.pay-navy { background:var(--navy); color:#fff; box-shadow:0 6px 22px rgba(40,37,96,.3); }
+.pay-navy:hover { background:#1e1b50; transform:translateY(-1px); }
+
+/* SCROLL HINT */
+.scroll-hint {
+  position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  animation:bounce 2s ease-in-out infinite; opacity:.45;
+}
+.scroll-hint span { font-size:.6rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase; }
+.sh-light span { color:rgba(255,255,255,.8); }
+.sh-dark  span { color:rgba(40,37,96,.7); }
+.arrow { width:18px;height:18px; border-right:2px solid currentColor; border-bottom:2px solid currentColor; transform:rotate(45deg); margin-top:-5px; }
+@keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(6px)} }
+
+/* FOOTER */
+.sec-footer {
+  margin-top:44px; padding-top:20px;
+  border-top:1px solid rgba(255,255,255,.1);
+  font-size:.68rem; color:rgba(255,255,255,.35);
+  display:flex; gap:20px; flex-wrap:wrap;
+}
+.sec-footer a { color:rgba(255,255,255,.35); text-decoration:none; }
+
+@media(max-width:600px){
+  nav { padding:12px 20px; }
+  .nav-tabs { display:none; }
+  .content { padding:0 20px; }
+  .sec-num { font-size:5rem; right:16px; }
+  h1 { font-size:2rem; }
+  .qr-wrap { width:88px; height:88px; }
+  .qr-wrap canvas, .qr-wrap img { width:76px!important; height:76px!important; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">AUGMT <span>· WYC 후원</span></div>
+  <div class="nav-tabs">
+    <a href="#s1" class="nav-tab active">University</a>
+    <a href="#s2" class="nav-tab">Field Project</a>
+    <a href="#s3" class="nav-tab">Missionary</a>
+  </div>
+  <div class="nav-dots">
+    <a href="#s1" class="nav-dot active"></a>
+    <a href="#s2" class="nav-dot"></a>
+    <a href="#s3" class="nav-dot"></a>
+  </div>
+</nav>
+
+
+<!-- PAGE 1 — 아르케대학 -->
+<section class="s1" id="s1">
+  <div class="s1-grid"></div>
+  <div class="sec-num sec-num-light">01</div>
+  <div class="content">
+    <div class="badge badge-light"><span class="bdot"></span>University</div>
+    <h1 class="h-light">아르케<br><span class="h-accent">대학교</span></h1>
+    <div class="divider div-orange"></div>
+    <p class="lead lead-light">
+      AUGMT(Arche University of Global Mission and Theology)는<br>
+      전 세계 선교와 신학 교육을 위해 설립된 대학교입니다.<br>
+      여러분의 후원이 다음 세대 선교사를 세웁니다.
+    </p>
+    <div class="arche-center">
+      <div class="donate-card">
+        <div class="qr-wrap" id="qr-arche"></div>
+        <div class="card-title">Arche Founders</div>
+        <div class="card-sub">대학 설립 후원</div>
+        <a href="https://www.zeffy.com/en-US/donation-form/arche-founders" target="_blank" class="pay-btn pay-primary">Pay Now →</a>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint sh-light"><span>Scroll</span><div class="arrow" style="color:rgba(255,255,255,.5)"></div></div>
+</section>
+
+
+<!-- PAGE 2 — 선교지프로젝트 -->
+<section class="s2" id="s2">
+  <div class="sec-num sec-num-dark">02</div>
+  <div class="content">
+    <div class="badge badge-dark"><span class="bdot"></span>Field Project</div>
+    <h1 class="h-dark">선교지<br><span class="h-accent">프로젝트</span></h1>
+    <div class="divider div-navy"></div>
+    <p class="lead lead-dark">국가별 선교 현장을 직접 지원합니다. QR을 스캔하거나 Pay Now를 클릭해 후원에 참여하세요.</p>
+    <div class="proj-grid">
+      <div class="proj-card"><div class="proj-flag">🇵🇰</div><div class="proj-name">Pakistan Project</div><div class="qr-wrap" id="qr-pak"></div><a href="https://www.zeffy.com/en-US/donation-form/pakistan-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇯🇴</div><div class="proj-name">Jordan Project</div><div class="qr-wrap" id="qr-jor"></div><a href="https://www.zeffy.com/en-US/donation-form/jordan-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇹🇷</div><div class="proj-name">Turkey Project</div><div class="qr-wrap" id="qr-tur"></div><a href="https://www.zeffy.com/en-US/donation-form/turkey-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇲🇦</div><div class="proj-name">Morocco Project</div><div class="qr-wrap" id="qr-mor"></div><a href="https://www.zeffy.com/en-US/donation-form/morocco-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇪🇬</div><div class="proj-name">Egypt Project</div><div class="qr-wrap" id="qr-egy"></div><a href="https://www.zeffy.com/en-US/donation-form/egypt-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇪🇹</div><div class="proj-name">Ethiopia Project</div><div class="qr-wrap" id="qr-eth"></div><a href="https://www.zeffy.com/en-US/donation-form/ethiopia-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇵🇭</div><div class="proj-name">Philippines Project</div><div class="qr-wrap" id="qr-phi"></div><a href="https://www.zeffy.com/en-US/donation-form/philippines-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+      <div class="proj-card"><div class="proj-flag">🇰🇷</div><div class="proj-name">One Korea Project</div><div class="qr-wrap" id="qr-kor"></div><a href="https://www.zeffy.com/en-US/donation-form/one-korea-project" target="_blank" class="pay-btn pay-navy">Pay Now →</a></div>
+    </div>
+  </div>
+  <div class="scroll-hint sh-dark"><span>Scroll</span><div class="arrow" style="color:rgba(40,37,96,.4)"></div></div>
+</section>
+
+
+<!-- PAGE 3 — 선교사가정 -->
+<section class="s3" id="s3">
+  <div class="sec-num sec-num-light">03</div>
+  <div class="content">
+    <div class="badge badge-light"><span class="bdot"></span>Missionary</div>
+    <h1 class="h-light">선교사<br><span class="h-accent">후원</span></h1>
+    <div class="divider div-orange"></div>
+    <p class="lead lead-light">선교지에서 헌신하는 선교사 가정을 직접 후원합니다. QR을 스캔하거나 Pay Now를 클릭해 참여해주세요.</p>
+    <div class="miss-grid">
+      <div class="miss-card"><div class="qr-wrap" id="qr-m1"></div><div class="miss-name">Nathanael Choi<br>& Esther Park</div><a href="https://www.zeffy.com/en-US/donation-form/nathanael-choi-and-esther-park" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+      <div class="miss-card"><div class="qr-wrap" id="qr-m2"></div><div class="miss-name">Moses Cho<br>& Livingwater Kim</div><a href="https://www.zeffy.com/en-US/donation-form/moses-cho-and-livingwater-kim" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+      <div class="miss-card"><div class="qr-wrap" id="qr-m3"></div><div class="miss-name">Philip Yoo<br>& Shalom Lee</div><a href="https://www.zeffy.com/en-US/donation-form/philip-you-and-shalom-lee" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+      <div class="miss-card"><div class="qr-wrap" id="qr-m4"></div><div class="miss-name">Paul Park<br>& Luke Choi</div><a href="https://www.zeffy.com/en-US/donation-form/paul-park-and-luke-choi" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+      <div class="miss-card"><div class="qr-wrap" id="qr-m5"></div><div class="miss-name">Seongchwee Choi<br>& Eonyak Jo</div><a href="https://www.zeffy.com/en-US/donation-form/seongchwee-choi-and-eonyak-jo" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+      <div class="miss-card"><div class="qr-wrap" id="qr-m6"></div><div class="miss-name">Sori Park</div><a href="https://www.zeffy.com/en-US/donation-form/sori-park" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+      <div class="miss-card"><div class="qr-wrap" id="qr-m7"></div><div class="miss-name">Taehoon<br>& Heeyeon Kim</div><a href="https://www.zeffy.com/en-US/donation-form/taehoon-and-heeyeon-kim" target="_blank" class="pay-btn pay-primary">Pay Now →</a></div>
+    </div>
+    <div class="sec-footer">
+      <span>© 2026 Arche University of Global Mission and Theology</span>
+      <span>EIN: 41-5213860</span>
+      <a href="mailto:admin@archeuniv.com">admin@archeuniv.com</a>
+      <a href="https://archeuniv.com" target="_blank">archeuniv.com</a>
+    </div>
+  </div>
+</section>
+
+<script>
+// QR 생성 함수
+function makeQR(id, url, dark) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  new QRCode(el, {
+    text: url,
+    width: 98,
+    height: 98,
+    colorDark: dark || '#282560',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+window.addEventListener('load', function() {
+  // PAGE 1
+  makeQR('qr-arche', 'https://www.zeffy.com/en-US/donation-form/arche-founders', '#282560');
+
+  // PAGE 2
+  makeQR('qr-pak', 'https://www.zeffy.com/en-US/donation-form/pakistan-project');
+  makeQR('qr-jor', 'https://www.zeffy.com/en-US/donation-form/jordan-project');
+  makeQR('qr-tur', 'https://www.zeffy.com/en-US/donation-form/turkey-project');
+  makeQR('qr-mor', 'https://www.zeffy.com/en-US/donation-form/morocco-project');
+  makeQR('qr-egy', 'https://www.zeffy.com/en-US/donation-form/egypt-project');
+  makeQR('qr-eth', 'https://www.zeffy.com/en-US/donation-form/ethiopia-project');
+  makeQR('qr-phi', 'https://www.zeffy.com/en-US/donation-form/philippines-project');
+  makeQR('qr-kor', 'https://www.zeffy.com/en-US/donation-form/one-korea-project');
+
+  // PAGE 3
+  makeQR('qr-m1', 'https://www.zeffy.com/en-US/donation-form/nathanael-choi-and-esther-park');
+  makeQR('qr-m2', 'https://www.zeffy.com/en-US/donation-form/moses-cho-and-livingwater-kim');
+  makeQR('qr-m3', 'https://www.zeffy.com/en-US/donation-form/philip-you-and-shalom-lee');
+  makeQR('qr-m4', 'https://www.zeffy.com/en-US/donation-form/paul-park-and-luke-choi');
+  makeQR('qr-m5', 'https://www.zeffy.com/en-US/donation-form/seongchwee-choi-and-eonyak-jo');
+  makeQR('qr-m6', 'https://www.zeffy.com/en-US/donation-form/sori-park');
+  makeQR('qr-m7', 'https://www.zeffy.com/en-US/donation-form/taehoon-and-heeyeon-kim');
+});
+
+// Nav active state
+const sections = document.querySelectorAll('section');
+const dots = document.querySelectorAll('.nav-dot');
+const tabs = document.querySelectorAll('.nav-tab');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const i = [...sections].indexOf(e.target);
+      dots.forEach((d,j) => d.classList.toggle('active', i===j));
+      tabs.forEach((t,j) => t.classList.toggle('active', i===j));
+    }
+  });
+}, { threshold: 0.5 });
+sections.forEach(s => io.observe(s));
+</script>
+</body>
+</html>
